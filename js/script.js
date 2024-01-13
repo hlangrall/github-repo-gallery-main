@@ -2,6 +2,8 @@
 const overview = document.querySelector(".overview");
 // github username
 const username = "hlangrall";
+// unordered list to display the repos list
+const repoList = document.querySelector(".repo-list");
 
 const getData = async function () {
   const res = await fetch(`https://api.github.com/users/${username}`);
@@ -26,4 +28,26 @@ const display = function (data) {
   </div>
   `;
   overview.append(newDiv);
+
+  getRepos();
+};
+
+const getRepos = async function () {
+  const request = await fetch(
+    `https://api.github.com/users/${username}/repos?sort=updated-asc&per_page=100`
+  );
+  const repoData = await request.json();
+  //console.log(repoData);
+
+  repoDisplay(repoData);
+};
+//getRepos();
+
+const repoDisplay = function (repos) {
+  for (const repo of repos) {
+    const li = document.createElement("li");
+    li.classList.add("repo");
+    li.innerHTML = `<h3>${repo.name}</h3>`;
+    repoList.append(li);
+  }
 };
